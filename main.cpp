@@ -1,7 +1,7 @@
 #include <iostream>
 #include <include/BackGround.h>
 #include <QtWidgets/QApplication>
-#include "MainWindow.h"
+#include "src/gui/MainWindow.h"
 
 int main(int argc, char *argv[])
 {

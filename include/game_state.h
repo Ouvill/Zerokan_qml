@@ -7,11 +7,7 @@
 class GameState : public QObject {
     Q_OBJECT
 
-  private:
-    int state_;
-    std::string previous_map_obj;
-
-  public:
+public:
   enum {
     NotRunnningClient = -1,
     NotGaming = 0,
@@ -23,6 +19,17 @@ class GameState : public QObject {
   GameState();
   ~GameState();
   int get();
+
+public slots:
+
+signals:
+    void changeGameState(int state);
+
+private:
+    int state_;
+    std::string previous_map_obj;
+
+
 };
 
 

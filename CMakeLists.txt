@@ -60,7 +60,7 @@ qt5_add_resources(QRC ${PROJECT_SOURCE_DIR}/Zerokan_WT_Flight_Recorder.qrc)
 
 set(SOURCE_FILES main.cpp
         src/gui/MainWindow.cpp
-        include/MainWindow.h
+        src/gui/MainWindow.h
         src/background/BackGround.cpp
         include/BackGround.h
         src/sql/AccessSQL.cpp
@@ -71,6 +71,14 @@ set(SOURCE_FILES main.cpp
         include/game_state.h
         src/background/http/async_client.cpp
         include/async_client.h
+        src/background/user.cpp
+        include/user.h
+        src/background/GameInfo.cpp include/GameInfo.h
+        include/hudmsg_reader.h
+        src/background/http/hudmsg_reader.cpp
+        include/damages.h
+        src/background/http/damages.cpp
+        include/picojson.hpp
         )
 add_executable(${PROJECT_NAME}  ${UIS_HDRS} ${SOURCE_FILES})
 

@@ -19,6 +19,7 @@ int GameState::get() {
 
   if (!(client.is_complete())) {
     state_ = NotRunnningClient;
+      emit changeGameState(state_);
     return state_;
   };
 
@@ -33,6 +34,8 @@ int GameState::get() {
   } else if (previous_map_obj != "" && current_map_obj == "") {
     state_ = GameEnd;
   }
+
+    emit changeGameState(state_);
 
   previous_map_obj = current_map_obj;
   return state_;

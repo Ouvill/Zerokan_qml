@@ -4,13 +4,14 @@
 
 #include <QtCore/QThread>
 #include <QtCore/QTimerEvent>
+#include "GameInfo.h"
 
 class BackGround : public QObject {
 
     Q_OBJECT
 
 public:
-    BackGround(QObject *parent = 0);
+    BackGround(QObject *parent, GameInfo *gameInfo);
 
 public slots:
     void loop();
@@ -20,7 +21,7 @@ public slots:
 private:
     bool exit_flag = false;
     int myTimerId;
-
+    GameInfo *gameInfo_;
 
 protected:
     void timerEvent(QTimerEvent *e);
