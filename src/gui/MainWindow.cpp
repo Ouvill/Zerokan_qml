@@ -1,5 +1,6 @@
 #include <include/Setting.h>
 #include <QtDebug>
+#include <src/background/Test.h>
 #include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -8,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setupUi(this);
 
+    Test foo;
+
     // setting;
     Setting *setting = new Setting();
     connect(setting, SIGNAL(changeUserName(QString)) , playerNameLabel,  SLOT(setText(QString)));
@@ -15,20 +18,30 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // gameInfo;
     gameInfo_ = new GameInfo(setting->userName());
-    connect(gameInfo_->game_state_,SIGNAL(changeGameState(int)),
-            this , SLOT(changeGameStateSlot(int)));
+    connect(gameInfo_->game_state_,SIGNAL(startGame()),
+            this , SLOT(startGameSlot()));
+    connect(gameInfo_->game_state_,SIGNAL(endGame()),
+            this , SLOT(endGameSlot()));
+
 
 
     // background
     background_ = new BackGround(0, gameInfo_);
-    backgroundThread_ = new QThread(this);
+    backgroundThread_ = new QThread();
     background_->moveToThread(backgroundThread_);
     connect(this, SIGNAL(background_loop()), background_, SLOT(loop()));
     connect(this, SIGNAL(background_stop()), background_, SLOT(stop()));
     connect(backgroundThread_, SIGNAL(finished()), background_, SLOT(deleteLater()));
+
+    connect(background_, SIGNAL(killSignal(QString)),
+            this , SLOT(killSlot(QString)));
+    connect(background_, SIGNAL(killedBySignal(QString)),
+            this , SLOT(killedBySlot(QString)));
+    connect(background_, SIGNAL(destroySignal(QString)),
+            this , SLOT(destroySlot(QString)));
+
     backgroundThread_->start();
     background_loop();
-
 
 }
 
@@ -39,31 +52,37 @@ MainWindow::~MainWindow()
     backgroundThread_->exit();
 }
 
-void MainWindow::changeGameStateSlot(int state) {
-    switch (state) {
-        case GameState::NotRunnningClient:
-            clientStateLabel->setText(tr("not running"));
-            gameStateLabel->setText(tr("not running"));
-            break;
-
-        case GameState::NotGaming:
-            clientStateLabel->setText(tr("running"));
-            gameStateLabel->setText(tr("not running"));
-            break;
-
-        case GameState::GameStart:
-            clientStateLabel->setText(tr("running"));
-            gameStateLabel->setText(tr("start"));
-            break;
-
-        case GameState::GameRunning:
-            clientStateLabel->setText(tr("running"));
-            gameStateLabel->setText(tr("running"));
-            break;
-
-        case GameState::GameEnd:
-            clientStateLabel->setText(tr("running"));
-            gameStateLabel->setText(tr("end"));
-            break;
-    }
+void MainWindow::startGameSlot() {
+    listWidgetClear();
+    clientStateLabel->setText(tr("running"));
+    gameStateLabel->setText(tr("start"));
+    QThread::sleep(3);
+    gameStateLabel->setText(tr("running"));
 }
+
+void MainWindow::endGameSlot() {
+    clientStateLabel->setText(tr("running"));
+    gameStateLabel->setText(tr("end"));
+    QThread::sleep(3);
+    gameStateLabel->setText(tr("not running"));
+
+}
+
+void MainWindow::killSlot(QString killMsg) {
+    killListWidget->addItem(killMsg);
+}
+
+void MainWindow::killedBySlot(QString killedMsg) {
+    killedByListWidget->addItem(killedMsg);
+}
+
+void MainWindow::destroySlot(QString destroyMsg) {
+    destroyListWidget->addItem(destroyMsg);
+}
+
+void MainWindow::listWidgetClear() {
+    killListWidget->clear();
+    killedByListWidget->clear();
+    destroyListWidget->clear();
+}
+

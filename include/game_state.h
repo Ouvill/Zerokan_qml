@@ -23,11 +23,13 @@ public:
 public slots:
 
 signals:
+    void startGame();
+    void endGame();
     void changeGameState(int state);
 
 private:
     int state_;
-    std::string previous_map_obj;
+    bool previous_valid;
 
 
 };

@@ -21,7 +21,12 @@ public:
     ~MainWindow();
 
 public slots:
-    void changeGameStateSlot(int state);
+    void startGameSlot();
+    void endGameSlot();
+    void killSlot(QString killMsg);
+    void killedBySlot(QString killedMsg);
+    void destroySlot(QString destroyMsg);
+    void listWidgetClear();
 
 signals:
     void background_loop();
@@ -33,7 +38,6 @@ private:
     BackGround *background_;
     QThread *backgroundThread_;
     GameInfo *gameInfo_;
-
 
 };
 

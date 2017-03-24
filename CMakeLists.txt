@@ -79,7 +79,9 @@ set(SOURCE_FILES main.cpp
         include/damages.h
         src/background/http/damages.cpp
         include/picojson.hpp
-        )
+        include/timer.h
+        src/background/http/timer.cpp
+        src/background/Test.cpp src/background/Test.h)
 add_executable(${PROJECT_NAME}  ${UIS_HDRS} ${SOURCE_FILES})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Sql  Qt5::Network Qt5::Qml Qt5::Quick)
