@@ -9,6 +9,4 @@ GameInfo::GameInfo(QString userName){
     game_state_ = new GameState();
     hudmsg_ = new HudmsgReader();
     damages_ = new Damages();
-
-
 }

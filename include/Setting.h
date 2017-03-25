@@ -12,12 +12,12 @@ public:
     ~Setting();
     QString userName();
     QString databaseName();
-    void setUserName(QString userName);
-    void setDatadaseName(QString databaseName);
 
 public slots:
     bool read();
     bool set(QString userName, QString databaseName);
+    void setUserName(QString userName);
+    void setDatadaseName(QString databaseName);
     bool write();
 
 signals:

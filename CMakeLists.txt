@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.6)
 project(Zerokan_WT_Flight_Recorder)
 
 set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Release)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
@@ -55,6 +57,7 @@ find_package(Qt5 COMPONENTS Qml Quick REQUIRED)
 include_directories(${PROJECT_SOURCE_DIR}/ui_forms)
 qt5_wrap_ui(UIS_HDRS
         src/gui/mainwindow.ui
+        src/gui/SettingForm.ui
         )
 qt5_add_resources(QRC ${PROJECT_SOURCE_DIR}/Zerokan_WT_Flight_Recorder.qrc)
 
@@ -81,7 +84,7 @@ set(SOURCE_FILES main.cpp
         include/picojson.hpp
         include/timer.h
         src/background/http/timer.cpp
-        src/background/Test.cpp src/background/Test.h)
+        src/gui/SettingForm.cpp src/gui/SettingForm.h)
 add_executable(${PROJECT_NAME}  ${UIS_HDRS} ${SOURCE_FILES})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Sql  Qt5::Network Qt5::Qml Qt5::Quick)
@@ -98,4 +101,5 @@ if (WIN32)
 #    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 #            COMMAND ${QT5_WINDEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:${PROJECT_NAME})
     target_link_libraries(${PROJECT_NAME} ws2_32)
+
 endif(WIN32)

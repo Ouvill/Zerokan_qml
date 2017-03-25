@@ -1,7 +1,7 @@
 #include <include/Setting.h>
 #include <QtDebug>
-#include <src/background/Test.h>
 #include "MainWindow.h"
+#include "SettingForm.h"
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
@@ -9,21 +9,17 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setupUi(this);
 
-    Test foo;
-
     // setting;
-    Setting *setting = new Setting();
-    connect(setting, SIGNAL(changeUserName(QString)) , playerNameLabel,  SLOT(setText(QString)));
-    setting->read();
+    setting_ = new Setting();
+    connect(setting_, SIGNAL(changeUserName(QString)) , playerNameLabel,  SLOT(setText(QString)));
+    setting_->read();
 
     // gameInfo;
-    gameInfo_ = new GameInfo(setting->userName());
+    gameInfo_ = new GameInfo(setting_->userName());
     connect(gameInfo_->game_state_,SIGNAL(startGame()),
             this , SLOT(startGameSlot()));
     connect(gameInfo_->game_state_,SIGNAL(endGame()),
             this , SLOT(endGameSlot()));
-
-
 
     // background
     background_ = new BackGround(0, gameInfo_);
@@ -39,10 +35,11 @@ MainWindow::MainWindow(QWidget *parent) :
             this , SLOT(killedBySlot(QString)));
     connect(background_, SIGNAL(destroySignal(QString)),
             this , SLOT(destroySlot(QString)));
-
     backgroundThread_->start();
     background_loop();
 
+    //menu
+    connect(settingAction, SIGNAL(triggered()) , this , SLOT(settingSelected()));
 }
 
 MainWindow::~MainWindow()
@@ -84,5 +81,11 @@ void MainWindow::listWidgetClear() {
     killListWidget->clear();
     killedByListWidget->clear();
     destroyListWidget->clear();
+}
+
+void MainWindow::settingSelected() {
+    settingForm_ = new SettingForm(0,setting_);
+    settingForm_->show();
+
 }
 

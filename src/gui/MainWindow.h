@@ -5,6 +5,7 @@
 #include <QtCore/QThread>
 #include "GameInfo.h"
 #include "BackGround.h"
+#include "SettingForm.h"
 #include <ui_mainwindow.h>
 
 
@@ -26,6 +27,7 @@ public slots:
     void killSlot(QString killMsg);
     void killedBySlot(QString killedMsg);
     void destroySlot(QString destroyMsg);
+    void settingSelected();
     void listWidgetClear();
 
 signals:
@@ -38,6 +40,9 @@ private:
     BackGround *background_;
     QThread *backgroundThread_;
     GameInfo *gameInfo_;
+    Setting *setting_;
+
+    SettingForm *settingForm_;
 
 };
 

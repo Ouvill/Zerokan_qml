@@ -135,6 +135,10 @@ void BackGround::startGameSlot() {
     qDebug() << "start gaming loop";
     gamingTimerId = startTimer(LOOP_TIME);
 
+    //to trash
+    Damages *tmp_damages = new Damages;
+    hudmsg_->get_damages(*tmp_damages);
+    delete tmp_damages;
 }
 
 void BackGround::endGameSlot() {

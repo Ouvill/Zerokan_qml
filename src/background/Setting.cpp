@@ -43,7 +43,7 @@ QString Setting::userName() {
 bool Setting::set(QString userName, QString databaseName) {
     setUserName(userName);
     setDatadaseName(databaseName);
-    return false;
+    return true;
 }
 
 QString Setting::databaseName() {
@@ -53,10 +53,12 @@ QString Setting::databaseName() {
 void Setting::setUserName(QString userName ) {
     userName_ = userName;
     qDebug() << "send setUserNameSignal";
+    write();
     emit changeUserName(userName_);
 }
 
 void Setting::setDatadaseName(QString databaseName) {
     databaseName_ = databaseName;
+    write();
     emit changeDataBaseName(databaseName_);
 }

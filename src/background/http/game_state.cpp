@@ -16,10 +16,10 @@ GameState::~GameState() {
 }
 
 int GameState::get() {
-    std::string indicators;
+    std::string data;
 
     boost::asio::io_service io_service;
-    AsyncClient client(io_service, "localhost" , "8111", "/indicators");
+    AsyncClient client(io_service, "localhost" , "8111", "/map_obj.json");
     io_service.run();
 
     if (!(client.is_complete())) {
@@ -28,12 +28,16 @@ int GameState::get() {
         return state_;
     };
 
-    indicators = client.body();
-    QByteArray json = indicators.c_str();
-    QJsonDocument jsonDoc(QJsonDocument::fromJson(json));
+    data = client.body();
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(data.c_str()));
 
-    QJsonObject jsonObj(jsonDoc.object());
-    auto current_valid = jsonObj.value("valid").toBool();
+    bool current_valid;
+    QJsonArray array = jsonDoc.array();
+    if (array.size() != 1) {
+        current_valid = true;
+    } else {
+        current_valid = false;
+    }
 
     if ( current_valid == true && previous_valid == false ) {
         state_ = GameRunning;
