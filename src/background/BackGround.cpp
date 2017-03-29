@@ -1,8 +1,8 @@
 #include <iostream>
 #include <include/AccessSQL.h>
 #include <QtDebug>
-#include <QtCore/QThread>
 #include <boost/filesystem/operations.hpp>
+#include <fstream>
 #include "BackGround.h"
 
 static const int LOOP_TIME = 1000;
@@ -125,6 +125,8 @@ void BackGround::searchUserMsg() {
 
                 break;
             }
+            default:
+                break;
         }
     }
 }

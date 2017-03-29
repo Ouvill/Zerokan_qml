@@ -1,7 +1,7 @@
 #include <include/Setting.h>
 #include <QtDebug>
 #include "MainWindow.h"
-#include "SettingForm.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(background_, SIGNAL(destroySignal(QString)),
             this , SLOT(destroySlot(QString)));
     backgroundThread_->start();
-    background_loop();
+    emit background_loop();
 
     //menu
     connect(settingAction, SIGNAL(triggered()) , this , SLOT(settingSelected()));
