@@ -1,0 +1,15 @@
+{
+  "objectives": [
+    {
+      "primary": true,
+      "status": "in_progress",
+      "text": "Capture and hold the airfield ╸ "
+    },
+    {
+      "primary": true,
+      "status": "in_progress",
+      "text": "Destroy the enemy aircraft and surface targets"
+    }
+  ],
+  "status": "running"
+}
