@@ -10,16 +10,26 @@ class Setting : public QObject {
 public:
     Setting(QObject *parent = 0);
     ~Setting();
-    QString getUserName();
+    QString userName();
+    QString databaseName();
 
 public slots:
     bool read();
+    bool set(QString userName, QString databaseName);
+    void setUserName(QString userName);
+    void setDatadaseName(QString databaseName);
     bool write();
+
+signals:
+    void changeUserName(QString userName);
+    void changeDataBaseName(QString);
 
 private:
     const QString settingFile = "settings.ini";
-    QString userName;
-    QString databaseName;
+    QString userName_;
+    QString databaseName_;
+
+
 };
 
 

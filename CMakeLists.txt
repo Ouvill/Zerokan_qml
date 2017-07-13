@@ -1,7 +1,9 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.5)
 project(Zerokan_WT_Flight_Recorder)
 
 set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Release)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
@@ -51,16 +53,21 @@ get_target_property(QtCore_location Qt5::Sql LOCATION)
 find_package(Qt5Network REQUIRED)
 get_target_property(QtCore_location Qt5::Network LOCATION)
 find_package(Qt5 COMPONENTS Qml Quick REQUIRED)
+find_package(Qt5 COMPONENTS OpenGL REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/ui_forms)
 qt5_wrap_ui(UIS_HDRS
         src/gui/mainwindow.ui
+        src/gui/SettingForm.ui
         )
-qt5_add_resources(QRC ${PROJECT_SOURCE_DIR}/Zerokan_WT_Flight_Recorder.qrc)
+qt5_add_resources(QRC ${PROJECT_SOURCE_DIR}/resources.qrc)
+FILE(GLOB QML_SRC ${PROJECT_SOURCE_DIR}/src/gui/qml/*.qml)
+FILE(COPY ${PROJECT_SOURCE_DIR}/src/gui/qml DESTINATION ${PROJECT_BINARY_DIR})
+add_custom_target(qmls SOURCES ${QML_SRC})
 
 set(SOURCE_FILES main.cpp
         src/gui/MainWindow.cpp
-        include/MainWindow.h
+        src/gui/MainWindow.h
         src/background/BackGround.cpp
         include/BackGround.h
         src/sql/AccessSQL.cpp
@@ -71,10 +78,20 @@ set(SOURCE_FILES main.cpp
         include/game_state.h
         src/background/http/async_client.cpp
         include/async_client.h
-        )
+        src/background/user.cpp
+        include/user.h
+        src/background/GameInfo.cpp include/GameInfo.h
+        include/hudmsg_reader.h
+        src/background/http/hudmsg_reader.cpp
+        include/damages.h
+        src/background/http/damages.cpp
+        include/picojson.hpp
+        include/timer.h
+        src/background/http/timer.cpp
+        src/gui/SettingForm.cpp src/gui/SettingForm.h)
 add_executable(${PROJECT_NAME}  ${UIS_HDRS} ${SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Sql  Qt5::Network Qt5::Qml Qt5::Quick)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Sql Qt5::Qml Qt5::Quick  Qt5::Network Qt5::OpenGL)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
@@ -86,6 +103,16 @@ if (WIN32)
     set(QT5_WINDEPLOYQT_EXECUTABLE "${QT5_WINDEPLOYQT_EXECUTABLE}/windeployqt.exe")
 #
 #    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-#            COMMAND ${QT5_WINDEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:${PROJECT_NAME})
+#            COMMAND ${QT5_WINDEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:${PROJECT_NAME}
+    execute_process(
+           COMMAND ${QT5_WINDEPLOYQT_EXECUTABLE} .
+           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    )
     target_link_libraries(${PROJECT_NAME} ws2_32)
+
 endif(WIN32)
+
+if(UNIX)
+    target_link_libraries(${PROJECT_NAME} boost_system pthread)
+    target_link_libraries(${PROJECT_NAME} boost_filesystem)
+endif()
